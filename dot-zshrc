@@ -1,0 +1,89 @@
+# Lazy-load (autoload) Zsh function files from a directory.
+ZFUNCDIR=${ZDOTDIR:-$HOME}/.zfunctions
+fpath=($ZFUNCDIR $fpath)
+autoload -Uz $ZFUNCDIR/*(.:t)
+
+if is-macos; then
+    # for macos
+    source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+else
+    # for arch
+    source '/usr/share/zsh-antidote/antidote.zsh'
+fi
+
+antidote load
+
+# theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# completion
+source <(fzf --zsh)
+
+autoload -U compinit && compinit
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+source <(carapace _carapace)
+
+# aliases
+alias eza="eza --icons=auto --hyperlink --color=always --color-scale=all --color-scale-mode=gradient --git --git-repos"
+alias ls="eza"
+alias ll="eza -lh"
+alias f='cd $(fd --type directory | fzf)'
+alias cd..='cd ..'
+
+alias ya="yazi"
+function ff() {
+ local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+ yazi "$@" --cwd-file="$tmp"
+ if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+  cd -- "$cwd"
+ fi
+ rm -f -- "$tmp"
+}
+
+if [[ -f ~/.zsh-config.zsh ]]; then
+    source ~/.zsh-config.zsh
+fi
+
+# for emacs
+# support vterm
+vterm_printf() {
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
+
+# emacs
+# Fix Emacs Tramp mode's imcompatible with zsh (oh-my-zsh) prompt
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  if whence -w precmd >/dev/null; then
+      unfunction precmd
+  fi
+  if whence -w preexec >/dev/null; then
+      unfunction preexec
+  fi
+  PS1='$ '
+fi
+
+# emacs eat
+[ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+  source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
