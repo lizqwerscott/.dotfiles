@@ -3,6 +3,7 @@
 This is my dotfiles repository managed with GNU Stow.
 
 ** Installation
+Clone the current project to the home directory.
 
 To install the dotfiles (create symlinks to your home directory):
 
@@ -35,3 +36,12 @@ Make sure you have GNU Stow installed:
 - macOS: =brew install stow=
 - Ubuntu/Debian: =sudo apt install stow=
 - Arch Linux: =sudo pacman -S stow=
+
+*** macos
+#+begin_src bash
+brew install zsh eza fzf antidote yazi carapace
+#+end_src
+*** arch
+#+begin_src bash
+yay -S zsh eza fzf antidote yazi carapace-bin
+#+end_src
