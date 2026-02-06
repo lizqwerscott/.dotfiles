@@ -1,5 +1,5 @@
 # Lazy-load (autoload) Zsh function files from a directory.
-ZFUNCDIR=${ZDOTDIR:-$HOME}/.zfunctions
+ZFUNCDIR=$HOME/.zfunctions
 fpath=($ZFUNCDIR $fpath)
 autoload -Uz $ZFUNCDIR/*(.:t)
 
@@ -11,12 +11,12 @@ elif [ -f /etc/arch-release ]; then
     source '/usr/share/zsh-antidote/antidote.zsh'
 else
     # Clone antidote if necessary.
-    if [[ ! -d ${ZDOTDIR:-$HOME}/.antidote ]]; then
-        git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-$HOME}/.antidote
+    if [[ ! -d $HOME/.antidote ]]; then
+        git clone https://github.com/mattmc3/antidote $HOME/.antidote
     fi
 
     # Create an amazing Zsh config using antidote plugins.
-    source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh
+    source $HOME/.antidote/antidote.zsh
 fi
 
 antidote load
