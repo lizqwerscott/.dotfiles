@@ -38,8 +38,11 @@ eval "$(zoxide init zsh)"
 
 # aliases
 alias eza="eza --icons=auto --hyperlink --color=always --color-scale=all --color-scale-mode=gradient --git --git-repos"
+alias l="eza"
 alias ls="eza"
-alias ll="eza -lh"
+alias ll='eza -lh'
+alias la='eza -lAh'
+alias g='git'
 alias f='cd $(fd --type directory | fzf)'
 alias cd..='cd ..'
 
