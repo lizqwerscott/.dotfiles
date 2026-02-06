@@ -27,7 +27,22 @@ antidote load
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # completion
-source <(fzf --zsh)
+# FZF: fuzzy finder
+if (( $+commands[brew] )); then
+    FZF="$(brew --prefix)/opt/fzf/shell/"
+elif (( $+commands[apt-get] )); then
+    FZF="/usr/share/doc/fzf/examples/"
+else
+    FZF="/usr/share/fzf/"
+fi
+
+if [[ -f "$FZF/completion.zsh" ]]; then
+    source "$FZF/completion.zsh"
+fi
+
+if [[ -f "$FZF/key-bindings.zsh" ]]; then
+    source "$FZF/key-bindings.zsh"
+fi
 
 autoload -U compinit && compinit
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
