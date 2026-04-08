@@ -104,6 +104,14 @@ function cpwd {
     fi
 }
 
+mkcd() {
+    if [ -z "$1" ]; then
+        echo "Usage: mkcd <directory>" >&2
+        return 1
+    fi
+    mkdir -p -- "$1" && cd -- "$1"
+}
+
 alias ya="yazi"
 function ff() {
  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
